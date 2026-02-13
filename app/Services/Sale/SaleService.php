@@ -31,7 +31,6 @@ class SaleService
         try {
             $total = 0;
 
-            // Cria a venda pendente
             $sale = Sale::create([
                 'total' => 0,
                 'status' => 'pending',
@@ -44,12 +43,10 @@ class SaleService
                     throw new \Exception("Estoque insuficiente para {$product->name}");
                 }
 
-                // Decrementa estoque
                 $product->decrement('stock', $item['quantity']);
 
                 $total += $product->price * $item['quantity'];
 
-                // Cria item da venda
                 SalesItens::create([
                     'saleId' => $sale->id,
                     'productId' => $product->id,
@@ -59,16 +56,14 @@ class SaleService
                 ]);
             }
 
-            // Atualiza total da venda
             $sale->total = $total;
             $sale->save();
 
-            // Gera cobrança PIX
             $pixData = $this->pixRepository->createCobranca([
                 'company' => [
-                    'id' => 1, // Ajustar para a empresa real
-                    'document' => '17089484000190', // CNPJ da empresa
-                    'values' => [], // Caso precise passar dados extras
+                    'id' => 1, 
+                    'document' => '17089484000190',
+                    'values' => [],
                 ],
                 'value' => $total,
                 'currentDate' => Carbon::now(),
@@ -77,7 +72,6 @@ class SaleService
                 'valueCost' => 0,
             ]);
 
-            // Salva TXID e QRCode na venda
             $sale->update([
                 'pix_txid' => $pixData['txid'],
                 'qrcode' => $pixData['qrcode'],
@@ -107,17 +101,32 @@ class SaleService
      */
     public function processPixWebhook(array $data)
     {
-        $sale = Sale::where('pix_txid', $data['txid'])->first();
+        logger()->info('Webhook PIX recebido:', ['data' => $data]);
+
+        $txid = $data['txid'] ?? 
+                $data['pix']['txid'] ?? 
+                $data['txId'] ?? 
+                null;
+
+        if (!$txid) {
+            return response()->json([
+                'message' => 'TXID não fornecido',
+                'received_data' => $data
+            ], 400);
+        }
+
+        $sale = Sale::where('pix_txid', $txid)->first();
 
         if (!$sale) {
+            logger()->warning('Venda não encontrada para TXID:', ['txid' => $txid]);
             return response()->json(['message' => 'Venda não encontrada'], 404);
         }
 
         if ($sale->status === 'completed') {
+            logger()->info('Venda já foi pagada:', ['txid' => $txid]);
             return response()->json(['message' => 'Venda já paga'], 200);
         }
 
-        // Atualiza status da venda
         $sale->update([
             'status' => 'completed',
             'paid_at' => isset($data['pix'][0]['pagoEm'])
@@ -125,6 +134,7 @@ class SaleService
                 : Carbon::now(),
         ]);
 
+        logger()->info('Venda atualizada com sucesso:', ['txid' => $txid, 'sale_id' => $sale->id]);
         return response()->json(['message' => 'Venda atualizada com sucesso'], 200);
     }
 }

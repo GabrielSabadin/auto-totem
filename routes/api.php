@@ -19,6 +19,5 @@ Route::middleware([FixedTokenMiddleware::class])
 Route::prefix('sales')->group(function () {
     Route::post('/', [SaleController::class, 'store']);
     Route::post('/pix-webhook', [SaleController::class, 'pixWebhook'])
-        ->name('api.sales.pix-webhook')
-        ->middleware('public.auth:false');
+        ->name('api.sales.pix-webhook');
 });

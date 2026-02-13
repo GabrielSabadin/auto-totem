@@ -35,7 +35,6 @@ class CheckPixPayment implements ShouldQueue
             $paymentData = $this->pixRepository->checkCobranca($this->txid);
 
             if ($paymentData && isset($paymentData['status']) && $paymentData['status'] == 'paid') {
-                // Busca a venda pela TXID
                 $sale = Sale::where('pix_txid', $this->txid)->first();
 
                 if ($sale) {
