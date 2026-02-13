@@ -15,7 +15,6 @@ class PixRepository
     public function __construct()
     {
         $this->baseUrl = 'https://pix.sgbr.com.br/v3/api/cobrancas';
-        $this->token = config('constants.TOKEN_WSRF');
         $this->token  = env('TOKEN_WSRF');
     }
 

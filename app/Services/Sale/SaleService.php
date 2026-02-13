@@ -5,7 +5,7 @@ namespace App\Services\Sale;
 use App\Models\Sale;
 use App\Models\SalesItens;
 use App\Models\Product;
-use App\Repositories\PixRepository;
+use App\Repositories\Sale\PixRepository;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
