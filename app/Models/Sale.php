@@ -11,7 +11,6 @@ class Sale extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'publicId',
         'total',
         'status',
     ];

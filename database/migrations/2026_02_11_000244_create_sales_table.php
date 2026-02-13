@@ -9,7 +9,6 @@ return new class extends Migration {
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->uuid('publicId')->unique();
             $table->decimal('total', 10, 2);
             
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');

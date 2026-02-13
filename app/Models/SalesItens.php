@@ -11,7 +11,6 @@ class SalesItens extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'publicId',
         'saleId',
         'productId',
         'productName',

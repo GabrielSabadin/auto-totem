@@ -9,7 +9,6 @@ return new class extends Migration {
     {
         Schema::create('sales_itens', function (Blueprint $table) {
             $table->id();
-            $table->uuid('publicId')->unique();
 
             $table->foreignId('saleId')->constrained('sales')->cascadeOnDelete();
             $table->foreignId('productId')->constrained('products')->cascadeOnDelete();

@@ -33,7 +33,6 @@ class SaleService
 
             // Cria a venda pendente
             $sale = Sale::create([
-                'publicId' => uniqid(),
                 'total' => 0,
                 'status' => 'pending',
             ]);
@@ -52,7 +51,6 @@ class SaleService
 
                 // Cria item da venda
                 SalesItens::create([
-                    'publicId' => uniqid(),
                     'saleId' => $sale->id,
                     'productId' => $product->id,
                     'productName' => $product->name,
