@@ -14,6 +14,12 @@ cd auto-totem
 Renomeie o arquivo .env.example para .env:
 
 mv .env.example .env
+
+Insira o token: adh21p-a1dma2-appdm2
+Na variável PRODUCT_API_TOKEN do env
+
+Na variavel TOKEN_WSRF solicitar a chave para o dono do repository
+
 Instale as dependências com o Composer:
 
 composer install
