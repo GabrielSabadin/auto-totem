@@ -13,10 +13,20 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $schedule->call(function () {
+            $pendingSales = \App\Models\Sale::where('status', 'pending')
+                                            ->whereNotNull('pix_txid')
+                                            ->get();
 
-        $schedule->job(new CheckPixPayment('TXID_DE_EXEMPLO', new \App\Repositories\Sale\PixRepository()))
-                 ->everyTenSeconds(); 
+            $pixRepository = app(\App\Repositories\Sale\PixRepository::class);
+
+            foreach ($pendingSales as $sale) {
+                (new \App\Jobs\CheckPixPayment($sale->pix_txid, $pixRepository))->handle();
+            }
+        })->everyTenSeconds();
+
     }
+
 
     /**
      * Register the commands for the application.

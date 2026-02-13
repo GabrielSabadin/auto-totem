@@ -15,9 +15,17 @@ class SaleController
         $this->service = $service;
     }
 
+    public function show($id)
+    {
+        return \App\Models\Sale::findOrFail($id);
+    }
+
+
     public function store(StoreSaleRequest $request)
     {
-        return $this->service->createSale($request->validated());
+        return $this->service->createSale(
+            $request->validated()['products']
+        );
     }
 
     public function pixWebhook(Request $request)

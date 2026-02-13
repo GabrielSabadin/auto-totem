@@ -11,9 +11,13 @@ class Sale extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'total',
-        'status',
-    ];
+    'total',
+    'status',
+    'pix_txid',
+    'qrcode',
+    'paid_at',
+];
+
 
     public function items()
     {

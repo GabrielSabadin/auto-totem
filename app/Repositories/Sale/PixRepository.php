@@ -31,7 +31,7 @@ class PixRepository
                 'cnpjCpf' => $data['company']['document'] ?? '17089484000190',
             ],
             'calendario' => [
-                'expiracao' => 8400, // 2h20min
+                'expiracao' => 8400,
             ],
             'valor' => [
                 'original' => (float) number_format($data['value'], 2, '.', ''),
@@ -39,13 +39,14 @@ class PixRepository
             'origem' => 'Toten',
             'repasse' => [
                 'exigir' => false,
+                'desconto' => 0
             ],
             'nota' => [
                 'exigir' => false,
             ],
             'webhooks' => [
                 [
-                    'url' => env('APP_URL', 'https://plus.meusg.com.br') . route('sales.pix-webhook', [], false),
+                    'url' => env('APP_URL', 'http://localhost') . route('sales.pix-webhook', [], false),
                     'descricao' => 'Webhook Toten'
                 ]
             ],
